@@ -1,0 +1,29 @@
+{
+  "name": "mongoose_skeleton",
+  "version": "1.0.0",
+  "description": "A Web scraper for bbc.news.com built with express, handlebars, cheerio, and mongo. Built for Homework 18 of the Northwestern Coding Bootcamp",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "watch": "nodemon server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "mongoose": "^5.3.16",
+    "morgan": "^1.9.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/maurera91/webScraper.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/maurera91/webScraper/issues"
+  },
+  "homepage": "https://github.com/maurera91/webScraper#readme"
+}
