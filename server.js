@@ -1,4 +1,5 @@
 var express = require("express");
+var exphbs = require("express-handlebars");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 var axios = require("axios");
@@ -11,6 +12,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static("public"));
 mongoose.connect( process.env.MONGODB_URI || "mongodb://localhost/scrapeDB", { useNewUrlParser: true });
+
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
+app.set('view engine', 'handlebars');
 
 // Routes
 
@@ -94,6 +98,7 @@ app.get('/saved', function (req, res) {
       Saved: Saved
     });
   });
+});
 
 
 // Route for grabbing a specific Article by id, populate it with it's note
