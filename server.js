@@ -18,6 +18,19 @@ app.set('view engine', 'handlebars');
 
 // Routes
 
+
+app.get('/', function (req, res) {
+  db.Article.find({}, (error, dbArticle) => {
+    if (error) {
+      console.log(error);
+    }
+    console.log(dbArticle)
+    // res.send(dbArticle)
+    res.render('index', {
+      articles: dbArticle
+    });
+  })
+});
 // A GET route for scraping the echoJS website
 app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
