@@ -1,0 +1,23 @@
+<h1>BBC Headline Scraper</h1>
+      <button id="scrape">Scrape BBC Articles</button>
+      <button id="saved">View Saved Articles</button>
+      
+      <div id="articles">
+           {{#each articles}}
+            <button class="card">
+                <a href={{link}} target="_blank">{{title}}</a> 
+  
+                {{#if saved}}
+                
+                <a data-id={{_id}} class="saved">Unsave</a>
+                
+                {{else}}
+                <a data-id={{_id}} class="notSaved">Save</a>
+
+                {{/if}}
+
+            </button>
+          {{/each}}
+
+      </div>
+      <div id="notes"></div>

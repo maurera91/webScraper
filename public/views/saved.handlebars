@@ -1,0 +1,14 @@
+<body class="container">
+   <h1>Saved Articles</h1>
+        <div>
+            <button id="home">New Articles</button>
+        </div>
+        <hr>
+        <div>
+            {{#each Saved}}
+            <div>
+                <a href={{link}} target="_blank">{{title}}</a>
+            </div>
+          {{/each}}
+
+</div>
