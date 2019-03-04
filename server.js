@@ -1,33 +1,16 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
-
-// Our scraping tools
-// Axios is a promised-based http library, similar to jQuery's Ajax method
-// It works on the client and on the server
 var axios = require("axios");
 var cheerio = require("cheerio");
-
-// Require all models
 var db = require("./models");
-
 var PORT = process.env.PORT || 3000;
-
-// Initialize Express
 var app = express();
-
-// Configure middleware
-
-// Use morgan logger for logging requests
 app.use(logger("dev"));
-// Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Make public a static folder
 app.use(express.static("public"));
-
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+mongoose.connect( process.env.MONGODB_URI || "mongodb://localhost/scrapeDB", { useNewUrlParser: true });
 
 // Routes
 
@@ -36,50 +19,34 @@ app.get("/scrape", function(req, res) {
   // First, we grab the body of the html with axios
   axios.get("http://bbc.com").then(function(response) {
     // Then, we load that into cheerio and save it to $ for a shorthand selector
+    console.log(response.data)
     var $ = cheerio.load(response.data);
 
     // Now, we grab every h2 within an article tag, and do the following:
-    $(".module module--news").each(function(i, element) {
+    $(".module--news .block-link").each(function(i, element) {
       // Save an empty result object
       var result = {};
 
       // Add the text and href of every link, and save them as properties of the result object
       result.title = $(this)
-        .children(".module__content")
-        .children("ul")
-        .children("li")
-        .children("div")
         .children(".media__content")
         .children("h3")
-        .children("a")
-        .text();
-      console.log(`** ${result.title} **`);
-      result.image = $(this)
-        .children(".module__content")
-        .children("ul")
-        .children("li")
-        .children("div")
-        .children(".media__image")
-        .children("div")
-        .children("img")
-        .attr("href");
-      result.content = $(this)
-        .children(".module__content")
-        .children("ul")
-        .children("li")
-        .children("div")
+        .text()
+        .replace(/\s\s+/g, "")
+        .replace(/\\/g,"");
+        
+                  
+      result.summary = $(this)
         .children(".media__content")
         .children("p")
-        .text();
-      result.link = $(this)
-        .children(".module__content")
-        .children("ul")
-        .children("li")
-        .children("div")
-        .children(".media__content")
-        .children("h3")
-        .children("a")
-        .attr("href");
+        .text()
+        .replace(/\s\s+/g, "")
+        .replace("/","")
+        .replace(/\\/g,"")
+
+      result.link = `https://www.bbc.com/${$(this)
+        .children(".block-link__overlay-link")
+        .attr("href")}`;
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
@@ -91,10 +58,12 @@ app.get("/scrape", function(req, res) {
           // If an error occurred, log it
           console.log(err);
         });
+        // Send a message to the client
+        res.send(result);
     });
 
-    // Send a message to the client
-    res.send(result);
+    
+    
   });
 });
 
@@ -110,7 +79,22 @@ app.get("/articles", function(req, res) {
       // If an error occurred, send it to the client
       res.json(err);
     });
-});
+  });
+
+app.get('/saved', function (req, res) {
+  db.Article.find({
+    saved: true
+  }, (error, Saved) => {
+    if (error) {
+      console.log(error);
+    }
+    console.log(Saved)
+    
+    res.render('saved', {
+      Saved: Saved
+    });
+  });
+
 
 // Route for grabbing a specific Article by id, populate it with it's note
 app.get("/articles/:id", function(req, res) {
@@ -147,6 +131,8 @@ app.post("/articles/:id", function(req, res) {
       res.json(err);
     });
 });
+
+
 
 // Start the server
 app.listen(PORT, function() {
