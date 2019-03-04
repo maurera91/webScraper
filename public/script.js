@@ -70,10 +70,15 @@ $(document).on("click", "#savenote", function() {
 });
 
 $("#scrape").on("click", () =>{
+  $("#articles").empty();
   $.ajax({
     method: "GET",
     url: "/scrape"});
 })
 $("#saved").on("click", () => {
-  document.location.href("/")
+  document.location.assign("/saved")
+})
+
+$("#home").on("click", () => {
+  document.location.assign("/")
 })

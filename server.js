@@ -25,7 +25,6 @@ app.get('/', function (req, res) {
       console.log(error);
     }
     console.log(dbArticle)
-    // res.send(dbArticle)
     res.render('index', {
       articles: dbArticle
     });
@@ -49,6 +48,7 @@ app.get("/scrape", function(req, res) {
         .children(".media__content")
         .children("h3")
         .text()
+        //replace functions to remove weird spacing and characters
         .replace(/\s\s+/g, "")
         .replace(/\\/g,"");
         
@@ -57,6 +57,7 @@ app.get("/scrape", function(req, res) {
         .children(".media__content")
         .children("p")
         .text()
+        //replace function's to remove weird spacing and characters
         .replace(/\s\s+/g, "")
         .replace("/","")
         .replace(/\\/g,"")
