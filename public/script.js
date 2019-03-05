@@ -20,7 +20,6 @@ $(document).on("click", ".article", function() {
   })
     // With that done, add the note information to the page
     .then(function(data) {
-      console.log(data);
       // The title of the article
       $("#notes").append("<h2>" + data.title + "</h2>");
       // An input to enter a new title
@@ -70,10 +69,17 @@ $(document).on("click", "#savenote", function() {
 });
 
 $("#scrape").on("click", () =>{
-  $("#articles").empty();
+  $("#articles").empty()
+  $("#articles").append("<h3>Articles<h3><hr>");
   $.ajax({
     method: "GET",
-    url: "/scrape"});
+    url: "/scrape"})
+    .then(
+      $.ajax({
+        method: "GET",
+        url:"/articles"
+      }).then()
+    );
 })
 $("#saved").on("click", () => {
   document.location.assign("/saved")

@@ -57,14 +57,14 @@ app.get("/scrape", function(req, res) {
         .children(".media__content")
         .children("p")
         .text()
-        //replace function's to remove weird spacing and characters
+        //replace functions to remove weird spacing and characters
         .replace(/\s\s+/g, "")
         .replace("/","")
         .replace(/\\/g,"")
 
-      result.link = `https://www.bbc.com/${$(this)
-        .children(".block-link__overlay-link")
-        .attr("href")}`;
+      result.link = `https://www.bbc.com/${
+        $(this).children(".block-link__overlay-link").attr("href")
+        }`;
 
       // Create a new Article using the `result` object built from scraping
       db.Article.create(result)
